@@ -66,7 +66,7 @@ public class EnemyManager : MonoBehaviour
 
         if (Physics.Raycast(_cam.ViewportPointToRay(spawnVPPosition), out hit, 100, LayerMask.GetMask("Ground")))
         {
-            Debug.Log(hit.point);
+            //Debug.Log(hit.point);
             _gameManager.pools[1].GetObjectFromPool(hit.point, Quaternion.identity);
         }
         _canSpawn = false;

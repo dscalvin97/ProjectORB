@@ -2,35 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PlayerInput))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : GameCharacterController
 {
-    // Movement
-    public float _PlayerSpeed = 20;
-    public float _PlayerRotateSpeed = 10;
-    
     // Stats
-    public float _Speed = 1;
-    public float _CurrentHealth = 100;
-    public float _MaxHealth = 100;
     public float _CritChance = .5f;
     public float _CritDamage = 1.5f;
     public float _Armor = 10;
     public float _ArmorDamageReduction = .75f;
 
-    private Rigidbody _playerRigidbody;
-    private GameManager _gameManager;
-    private GameControls _gameControls;
-    private PlayerInput _playerInput;
-    private bool _useMouseRotation = true;
-    private Camera _cam;
-
     public GameObject _thrusterFront;
     public GameObject _thrusterBack;
     public GameObject _thrusterLeft;
     public GameObject _thrusterRight;
+    
+    protected bool _useMouseRotation = true;
+
+    private GameControls _gameControls;
+    private PlayerInput _playerInput;
 
     private void Awake()
     {
@@ -38,69 +30,97 @@ public class PlayerController : MonoBehaviour
         _useMouseRotation = _playerInput.currentControlScheme == "Keyboard and Mouse";
     }
 
-    private void Start()
+    public override void Start()
     {
-        _playerRigidbody = GetComponent<Rigidbody>();
-        _gameManager = FindObjectOfType<GameManager>();
+        base.Start();
         _gameControls = _gameManager._GameControls;
-        _cam = Camera.main;
+    }
+
+    private void Update()
+    {
+        if (_gameControls.Gameplay.Shoot.inProgress)
+        {
+            foreach (IWeapon weapon in _weapons)
+            {
+                weapon.Fire();
+            }
+        }
     }
 
     private void FixedUpdate()
     {
-        Movement();
-        Rotation();
+        PlayerMovement();
 
+        PlayerRotation();
     }
 
     private void OnControlsChanged()
     {
-        if (!_playerInput) return;
-
-        _useMouseRotation = _playerInput.currentControlScheme == "Keyboard and Mouse";
+        if (_playerInput)
+            _useMouseRotation = _playerInput.currentControlScheme == "Keyboard and Mouse";
     }
 
-    private void Movement()
+    public override void Movement(Vector3 input)
     {
-        Vector2 direction = _gameControls.Gameplay.Move.ReadValue<Vector2>();
-        Vector3 inputDirection = new Vector3(direction.x, 0, direction.y).normalized;
-        Vector3 movement = (inputDirection * _PlayerSpeed * _Speed * Time.deltaTime);
-        _playerRigidbody.MovePosition(_playerRigidbody.position + movement);
+        Vector3 movement = (input * _CharacterSpeed);
+        _characterRigidbody.MovePosition(_characterRigidbody.position + (movement) * Time.deltaTime);
 
+        ThrusterMovement(_thrusterBack, movement, transform.forward, true, true);
+        ThrusterMovement(_thrusterFront, movement, -transform.forward, true, false);
+        ThrusterMovement(_thrusterLeft, movement, -transform.right, false, false);
+        ThrusterMovement(_thrusterRight, movement, transform.right, false, true);
         // Set thruster flame positions
-        float backThrust = Mathf.Clamp01(Vector3.Dot(_playerRigidbody.velocity, transform.forward));
-        float frontThrust = Mathf.Clamp01(Vector3.Dot(_playerRigidbody.velocity, -transform.forward));
-        float leftThrust = Mathf.Clamp01(Vector3.Dot(_playerRigidbody.velocity, -transform.right));
-        float rightThrust = Mathf.Clamp01(Vector3.Dot(_playerRigidbody.velocity, transform.right));
-
-        backThrust = Mathf.Lerp(.5f, 0, backThrust);
-        frontThrust = Mathf.Lerp(-.5f, 0, frontThrust);
-        leftThrust = Mathf.Lerp(-.5f, 0, leftThrust);
-        rightThrust = Mathf.Lerp(.5f, 0, rightThrust);
-        _thrusterBack.transform.localPosition = Vector3.Lerp(_thrusterBack.transform.localPosition, new Vector3(0, 0, backThrust), Time.deltaTime * 10);
-        _thrusterFront.transform.localPosition = Vector3.Lerp(_thrusterFront.transform.localPosition, new Vector3(0, 0, frontThrust), Time.deltaTime * 10);
-        _thrusterLeft.transform.localPosition = Vector3.Lerp(_thrusterLeft.transform.localPosition, new Vector3(leftThrust, 0, 0), Time.deltaTime * 10);
-        _thrusterRight.transform.localPosition = Vector3.Lerp(_thrusterRight.transform.localPosition, new Vector3(rightThrust, 0, 0), Time.deltaTime * 10);
+        //float backThrust = Mathf.Clamp01(Vector3.Dot(movement, transform.forward));
+        //float frontThrust = Mathf.Clamp01(Vector3.Dot(movement, -transform.forward));
+        //float leftThrust = Mathf.Clamp01(Vector3.Dot(movement, -transform.right));
+        //float rightThrust = Mathf.Clamp01(Vector3.Dot(movement, transform.right));
+        //backThrust = Mathf.Lerp(.5f, 0, backThrust);
+        //frontThrust = Mathf.Lerp(-.5f, 0, frontThrust);
+        //leftThrust = Mathf.Lerp(-.5f, 0, leftThrust);
+        //rightThrust = Mathf.Lerp(.5f, 0, rightThrust);
+        //_thrusterBack.transform.localPosition = Vector3.Lerp(_thrusterBack.transform.localPosition, new Vector3(0, 0, backThrust), Time.deltaTime * 10);
+        //_thrusterFront.transform.localPosition = Vector3.Lerp(_thrusterFront.transform.localPosition, new Vector3(0, 0, frontThrust), Time.deltaTime * 10);
+        //_thrusterLeft.transform.localPosition = Vector3.Lerp(_thrusterLeft.transform.localPosition, new Vector3(leftThrust, 0, 0), Time.deltaTime * 10);
+        //_thrusterRight.transform.localPosition = Vector3.Lerp(_thrusterRight.transform.localPosition, new Vector3(rightThrust, 0, 0), Time.deltaTime * 10);
     }
 
-    private void Rotation()
+    private void PlayerMovement()
     {
-        Vector3 direction = Vector3.zero;
+        Vector2 moveDirection = _gameControls.Gameplay.Move.ReadValue<Vector2>();
+        Vector3 movementInput = new Vector3(moveDirection.x, 0, moveDirection.y).normalized;
+
+        Movement(movementInput);
+    }
+
+    private void PlayerRotation()
+    {
+        // Rotation Calculation
+        Vector3 rotationInput = new Vector3();
+        Vector3 rotateDirection = Vector3.zero;
+
         if (_useMouseRotation)
         {
-            Vector3 input = _gameControls.Gameplay.LookMouse.ReadValue<Vector2>();
+            rotationInput = _gameControls.Gameplay.LookMouse.ReadValue<Vector2>();
+
             RaycastHit hit;
 
-            if (Physics.Raycast(_cam.ScreenPointToRay(input), out hit, 100, LayerMask.GetMask("Ground")))
-                direction = (hit.point - transform.position).normalized;
+            if (Physics.Raycast(_cam.ScreenPointToRay(rotationInput), out hit, 100, LayerMask.GetMask("Ground")))
+                rotateDirection = (hit.point - transform.position).normalized;
         }
         else
         {
-            Vector2 input = _gameControls.Gameplay.LookGamepad.ReadValue<Vector2>();
-            direction = new Vector3(input.x, 0, input.y).normalized;
+            rotationInput = _gameControls.Gameplay.LookGamepad.ReadValue<Vector2>();
+            rotateDirection = new Vector3(rotationInput.x, 0, rotationInput.y).normalized;
         }
 
-        if (direction != Vector3.zero)
-            _playerRigidbody.rotation = Quaternion.Lerp(_playerRigidbody.rotation, Quaternion.LookRotation(direction, Vector3.up), _PlayerRotateSpeed * Time.deltaTime);
+        Rotation(rotateDirection);
+    }
+
+    private void ThrusterMovement(GameObject thrusterObject, Vector3 movement, Vector3 referenceVector, bool moveInForwardAxis, bool moveForwardOrRight)
+    {
+        float thrust = Mathf.Clamp01(Vector3.Dot(movement, referenceVector));
+        thrust = Mathf.Lerp(moveForwardOrRight ? .5f : -.5f, 0, thrust);
+        Vector3 newPosition = moveInForwardAxis ? new Vector3(0, 0, thrust) : new Vector3(thrust, 0, 0);
+        thrusterObject.transform.localPosition = Vector3.Lerp(thrusterObject.transform.localPosition, newPosition, Time.deltaTime * 10);
     }
 }

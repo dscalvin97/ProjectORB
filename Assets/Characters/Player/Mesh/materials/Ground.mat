@@ -39,7 +39,7 @@ Material:
     - _Posterize: 4.82
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _TerrainSize: 1.75
+    - _TerrainSize: 3.1415927
     m_Colors: []
   m_BuildTextureStacks: []
 --- !u!114 &6216874696475946854

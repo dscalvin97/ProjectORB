@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public enum WeaponType { Projectile, HitScan }
 
-public class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviour, IWeapon
 {
     
     public WeaponType _WeaponType = WeaponType.Projectile;
@@ -37,19 +37,18 @@ public class Weapon : MonoBehaviour
         if (_fireTimer > 1 / _FireRate)
             _canFire = true;
 
-        if (_canFire && _gameControls.Gameplay.Shoot.inProgress)
-            Fire();
-        else
-            _fireTimer += Time.deltaTime;
+        _fireTimer += Time.deltaTime;
     }
 
-    private void Fire()
+    public void Fire()
     {
-        _canFire = false;
-        _fireTimer = 0;
-
-        IWeaponAmmo ammo = _gameManager.pools[0].GetObjectFromPool(_bulletSpawn.transform) as IWeaponAmmo;
-        ammo.SetAmmoDamage(_BaseDamage);
-        ammo.SetAmmoSpeed(_AmmoSpeed);
+        if (_canFire)
+        {
+            IWeaponAmmo ammo = _gameManager.pools[0].GetObjectFromPool(_bulletSpawn.transform) as IWeaponAmmo;
+            ammo.SetAmmoDamage(_BaseDamage);
+            ammo.SetAmmoSpeed(_AmmoSpeed);
+            _canFire = false;
+            _fireTimer = 0;
+        }
     }
 }
