@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="OrbV01">
+    <Position X="29" Y="11" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAgAABAAAAAAAEAgAAAAAAEAAYAAAAAAACEA=</HashCode>
+      <FileName>Assets\Characters\Enemies\ORB-0.1\OrbV01.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyController">
+    <Position X="28.25" Y="6.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEqAAAAAgAAAACAAAgAAAAAgAAAgABAAAAAA=</HashCode>
+      <FileName>Assets\Characters\Enemies\EnemyController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CameraBehaviour">
+    <Position X="7.75" Y="7.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAigAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Characters\Player\CameraBehaviour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FloatingMovement">
+    <Position X="9.75" Y="7.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAgAg=</HashCode>
+      <FileName>Assets\Characters\Player\FloatingMovement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerController">
+    <Position X="18.75" Y="6.75" Width="9.25" />
+    <TypeIdentifier>
+      <HashCode>AASBIQBIAiAIJgQgEIRCAQAAQAgARAEACAoChAEAE2A=</HashCode>
+      <FileName>Assets\Characters\Player\PlayerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyManager">
+    <Position X="7.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQQAQAACCAAAAAAAAAACBIIAAAAAIAAAEAAAACQAAA=</HashCode>
+      <FileName>Assets\Characters\EnemyManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameCharacterController">
+    <Position X="25" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAIAABAACCgAAIAgBgACABAMAACAAEACAAAAhABACAA=</HashCode>
+      <FileName>Assets\Characters\GameCharacterController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MainMenuBehavior">
+    <Position X="0.5" Y="10.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAEIAABAAAAAAgAhAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Assets\Core\UI\MainMenuBehavior.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UpgradeMenuBehaviour">
+    <Position X="3.5" Y="10.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAgAEAACCAQAAEAQAAACAACAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Core\UI\UpgradeMenuBehaviour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManager">
+    <Position X="10.5" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAgEgiQAAIEhAAABEAACoABACAAAACAAGAYAAGA=</HashCode>
+      <FileName>Assets\Core\GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectPool">
+    <Position X="7.75" Y="13.5" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAABAAAQAgAAQAAAAAgAEAAAAAgA=</HashCode>
+      <FileName>Assets\Core\ObjectPool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StickToGameObject">
+    <Position X="7.75" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAgAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Core\StickToGameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UtilityFunctions">
+    <Position X="9.75" Y="10.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Core\UtilityFunctions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bullet">
+    <Position X="19.5" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAABAG6AAAAAAAAAAAQAIAAAQAAAARAgABAAAAAA=</HashCode>
+      <FileName>Assets\WeaponPrefabs\Bullet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Weapon">
+    <Position X="15" Y="0.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAACCAAAAQAAAQAAAAAAAAFAACACAAAAAAACAA=</HashCode>
+      <FileName>Assets\WeaponPrefabs\Weapon.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BackgroundMusic">
+    <Position X="12" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Core\BackgroundMusic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="IDamageable">
+    <Position X="0.5" Y="2.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Core\Interfaces\IDamageable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="IPoolableObject">
+    <Position X="0.5" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAgABAAAAAA=</HashCode>
+      <FileName>Assets\Core\Interfaces\IPoolableObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="IWeapon">
+    <Position X="0.5" Y="5.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\WeaponPrefabs\Interfaces\IWeapon.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="IReloadableWeapon">
+    <Position X="1.75" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Assets\WeaponPrefabs\Interfaces\IWeapon.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="IWeaponAmmo">
+    <Position X="0.5" Y="4" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\WeaponPrefabs\Interfaces\IWeaponAmmo.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ScreenDirection" Collapsed="true">
+    <Position X="5.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAACACAAAAAAAA=</HashCode>
+      <FileName>Assets\Characters\EnemyManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="UpgradeChoice" Collapsed="true">
+    <Position X="5.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAIAAAAAAABAABAAAAAAEBAAAAAEEAE=</HashCode>
+      <FileName>Assets\Core\UI\UpgradeMenuBehaviour.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WeaponType" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Assets\WeaponPrefabs\Weapon.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

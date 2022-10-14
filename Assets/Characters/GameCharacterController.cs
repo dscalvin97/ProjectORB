@@ -4,58 +4,110 @@ using UnityEngine;
 
 public abstract class GameCharacterController : MonoBehaviour, IDamageable
 {
+    #region Variables
     // Movement
     public float _CharacterSpeed = 20;
     public float _CharacterRotateSpeed = 10;
 
     // Stats
-    public float _MaxHealth = 100;
+    public float _BaseDamage = 10;
 
     protected Rigidbody _characterRigidbody;
     protected GameManager _gameManager;
     protected Camera _cam;
     protected List<IWeapon> _weapons = new List<IWeapon>();
-
+    protected GameObject _characterMesh;
+    protected bool _isDying = false;
+    [SerializeField]
+    private float _maxHealth = 100;
+    [SerializeField]
     private float _currentHealth = 100;
+    private bool _canDie = true;
 
     public float _CurrentHealth
     {
         get => _currentHealth;
         set
         {
+            var isDamage = value < _currentHealth;
             _currentHealth = value;
-            if (_currentHealth < 0)
-                Die();
+            if (isDamage)
+                TakeDamage();
+            if (_currentHealth < 0 && _canDie)
+            {
+                _canDie = false;
+                StartDying();
+            }
         }
     }
 
-    public virtual void Start()
+    public float _MaxHealth { get => _maxHealth;
+        set 
+        {
+            _maxHealth = value;
+            _CurrentHealth = _maxHealth;
+        } 
+    }
+    #endregion
+
+    #region Unity Methods
+    protected virtual void Start()
     {
+        _characterMesh = transform.Find("Mesh").gameObject;
         _characterRigidbody = GetComponent<Rigidbody>();
         _gameManager = FindObjectOfType<GameManager>();
         _cam = Camera.main;
         _weapons = GetComponentsInChildren<IWeapon>().ToList();
     }
 
-    public virtual void Movement(Vector3 input)
+    protected virtual void OnEnable()
     {
-        Vector3 movement = Vector3.ClampMagnitude(input * _CharacterSpeed * Time.deltaTime, 1);
-        _characterRigidbody.MovePosition(_characterRigidbody.position + movement);
+        _CurrentHealth = _MaxHealth;
     }
+    #endregion
 
-    public virtual void Rotation(Vector3 direction)
+    #region Class Implementation Inherited by Child Classes
+    protected virtual void TakeDamage() {}
+
+    protected virtual void Die()
     {
-        if (direction != Vector3.zero)
-            _characterRigidbody.rotation = Quaternion.Lerp(_characterRigidbody.rotation, Quaternion.LookRotation(direction, Vector3.up), _CharacterRotateSpeed * Time.deltaTime);
+        _isDying = false;
     }
+    #endregion
 
-    public virtual void Die()
+    #region Interface Implementations
+    public virtual void StartDying()
     {
-        Debug.Log("I am dead");
+        _isDying = true;
     }
 
     public virtual void DoDamage(float damageAmount)
     {
         _CurrentHealth -= damageAmount;
     }
+    #endregion
+
+    #region Internal Functions
+    protected void Movement(Vector3 input)
+    {
+        if (!_isDying)
+        {
+            Vector3 movement = Vector3.ClampMagnitude(input, 1) * _CharacterSpeed;
+            _characterRigidbody.velocity = Vector3.Lerp(_characterRigidbody.velocity, movement, Time.deltaTime * 20);
+        }
+        else
+        {
+            _characterRigidbody.velocity = Vector3.Lerp(_characterRigidbody.velocity, Vector3.zero, Time.deltaTime * 2);
+        }
+    }
+
+    protected void Rotation(Vector3 direction)
+    {
+        if (!_isDying)
+        {
+            if (direction != Vector3.zero)
+                _characterRigidbody.rotation = Quaternion.Lerp(_characterRigidbody.rotation, Quaternion.LookRotation(direction, Vector3.up), _CharacterRotateSpeed * Time.deltaTime);
+        }
+    }
+    #endregion
 }

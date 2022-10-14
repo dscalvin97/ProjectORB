@@ -5,45 +5,55 @@ using UnityEngine;
 public class ObjectPool
 {
     public GameObject gameObject;
-    public int count;
-    private List<IPoolableObject> objects;
+    public int poolCount;
+    private List<IPoolableObject> objectPool;
     private Transform tr;
+
+    public int Count { get => objectPool.Count; }
 
     public void InitializePool(Transform transform)
     {
-        objects = new List<IPoolableObject>();
+        objectPool = new List<IPoolableObject>();
         tr = transform;
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < poolCount; i++)
         {
             GameObject instantiatedGO = GameObject.Instantiate(gameObject, tr);
-
-            objects.Add(instantiatedGO.GetComponent<IPoolableObject>());
+            IPoolableObject poolObject = instantiatedGO.GetComponent<IPoolableObject>();
+            objectPool.Add(poolObject);
+            poolObject.SetOriginatingPool(this);
             instantiatedGO.SetActive(false);
         }
 
-        Debug.Log("" + gameObject.name + " Pool Initialized with count of " + objects.Count);
+        Debug.Log("" + gameObject.name + " Pool Initialized with count of " + objectPool.Count);
     }
 
     public IPoolableObject GetObjectFromPool(Transform transform) { return GetObjectFromPool(transform.position, transform.rotation); }
     public IPoolableObject GetObjectFromPool(Vector3 atPosition, Quaternion withRotation)
     {
-        // Pop object from pool
-        IPoolableObject poolObject = objects[0];
-        objects.Remove(objects[0]);
+        if (objectPool.Count > 0)
+        {
+            // Pop object from pool
+            IPoolableObject poolObject = objectPool[0];
+            objectPool.Remove(objectPool[0]);
 
-        // Teleport to location in correct direction
-        poolObject.GetGameObject().SetActive(true);
-        poolObject.GetGameObject().transform.parent = null;
-        poolObject.GetGameObject().transform.position = atPosition;
-        poolObject.GetGameObject().transform.rotation = withRotation;
+            // Teleport to location in correct direction
+            poolObject.GetGameObject().SetActive(true);
+            poolObject.GetGameObject().transform.parent = null;
+            poolObject.GetGameObject().transform.position = atPosition;
+            poolObject.GetGameObject().transform.rotation = withRotation;
 
-        return poolObject;
+            return poolObject;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void ReturnObjectToPool(IPoolableObject returnedPoolObject)
     {
-        objects.Add(returnedPoolObject);
+        objectPool.Add(returnedPoolObject);
         returnedPoolObject.GetGameObject().transform.SetParent(tr);
         returnedPoolObject.GetGameObject().transform.position = Vector3.zero;
         returnedPoolObject.GetGameObject().transform.rotation = Quaternion.identity;

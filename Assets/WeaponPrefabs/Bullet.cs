@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -10,6 +8,7 @@ public class Bullet : MonoBehaviour, IWeaponAmmo, IPoolableObject
     private Rigidbody _rig;
     private Camera _cam;
     private GameManager _gameManager;
+    private ObjectPool originalPool;
 
     private void Start()
     {
@@ -24,7 +23,7 @@ public class Bullet : MonoBehaviour, IWeaponAmmo, IPoolableObject
         float boundsMin = -.25f;
         float boundsMax = 1.25f;
         if (vpPos.x < boundsMin || vpPos.y < boundsMin || vpPos.x > boundsMax || vpPos.y > boundsMax)
-            _gameManager.pools[0].ReturnObjectToPool(this);
+            SendBackToPool();
     }
 
     private void FixedUpdate()
@@ -32,10 +31,20 @@ public class Bullet : MonoBehaviour, IWeaponAmmo, IPoolableObject
         _rig.MovePosition(_rig.position + (transform.TransformDirection(Vector3.forward) * Time.deltaTime * _speed));
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        collision.gameObject.GetComponent<IDamageable>().DoDamage(_damage);
-        _gameManager.pools[0].ReturnObjectToPool(this);
+        if (other.transform.parent.gameObject)
+        {
+            try
+            {
+                other.GetComponentInParent<IDamageable>().DoDamage(_damage);
+            }
+            catch (System.Exception)
+            {
+                //Debug.Log("Not an IDamageableObject");
+            }
+            SendBackToPool();
+        }
     }
 
     public void SetAmmoDamage(float damageValue)
@@ -51,5 +60,15 @@ public class Bullet : MonoBehaviour, IWeaponAmmo, IPoolableObject
     public GameObject GetGameObject()
     {
         return gameObject;
+    }
+
+    public void SendBackToPool()
+    {
+        originalPool.ReturnObjectToPool(this);
+    }
+
+    public void SetOriginatingPool(ObjectPool originalPool)
+    {
+        this.originalPool = originalPool;
     }
 }
